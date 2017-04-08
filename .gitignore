@@ -1,2 +1,9 @@
+# Binary files
+build/
+
+# KDevelop
+*.kdev4
+.kdev4/*
+
 # Backup
 *~
