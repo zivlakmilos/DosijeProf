@@ -13,6 +13,9 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
     QCoreApplication::setOrganizationName("Milos Zivlak");
     QCoreApplication::setOrganizationDomain("zivlak.ddns.net");
 
+    QSettings settings;
+    settings.setValue("url/img", "http://zivlak.ddns.net/dosije/img/");
+
     QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
     db.setHostName(QCoreApplication::organizationDomain());
     db.setDatabaseName("dosijeprof");

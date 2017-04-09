@@ -4,6 +4,9 @@
 #include <QDialog>
 #include "ui_podaci.h"
 
+class QNetworkAccessManager;
+class QNetworkReply;
+
 class DPodaci : public QDialog, private Ui::frmPodaci
 {
     Q_OBJECT
@@ -18,9 +21,12 @@ private:
     void setupGUI(void);
 
     int m_id;
+    QNetworkAccessManager *m_networkManager;
 
 private slots:
     void promenaNatpisa(void);
+    void networkManagerFinished(QNetworkReply *reply);
+    void snimi(void);
 };
 
 #endif // _W_PODACI_H_

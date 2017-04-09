@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 project(DosijeProf)
 
-find_package(Qt4 COMPONENTS QtCore QtGui QtSql REQUIRED)
+find_package(Qt4 COMPONENTS QtCore QtGui QtSql QtNetwork REQUIRED)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 set(CMAKE_AUTORCC on)
@@ -48,6 +48,7 @@ target_link_libraries(${PROJECT_NAME}
     ${QT_QTCORE_LIBRARY}
     ${QT_QTGUI_LIBRARY}
     ${QT_QTSQL_LIBRARY}
+    ${QT_QTNETWORK_LIBRARY}
 )
 
 install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)

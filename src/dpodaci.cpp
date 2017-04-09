@@ -2,6 +2,7 @@
 
 #include <QtGui>
 #include <QtSql>
+#include <QtNetwork/QtNetwork>
 
 DPodaci::DPodaci(QWidget *parent, Qt::WindowFlags f)
     : QDialog(parent, f),
@@ -9,6 +10,13 @@ DPodaci::DPodaci(QWidget *parent, Qt::WindowFlags f)
 {
     setupUi(this);
     setupGUI();
+
+    m_networkManager = new QNetworkAccessManager(this);
+    connect(m_networkManager, SIGNAL(finished(QNetworkReply*)),
+            this, SLOT(networkManagerFinished(QNetworkReply*)));
+
+    connect(this, SIGNAL(accepted()),
+            this, SLOT(snimi()));
 }
 
 DPodaci::~DPodaci(void)
@@ -56,12 +64,85 @@ void DPodaci::setId(int id)
         txtJmbg->setText(query.value(3).toString());
         deDatumRodjenja->setDate(query.value(4).toDate());
         txtAdresa->setText(query.value(5).toString());
-        txtOstaliPodaci->setText(query.value(8).toString());
-        txtMisljenje->setText(query.value(9).toString());
+        txtOstaliPodaci->setText(query.value(9).toString());
+        txtMisljenje->setText(query.value(10).toString());
+
+        QSettings settings;
+        QUrl url(settings.value("url/img").toString() + query.value(8).toString());
+        QNetworkRequest request(url);
+        m_networkManager->get(request);
     }
 }
 
 void DPodaci::promenaNatpisa(void)
 {
     setWindowTitle(tr("%1 %2").arg(txtIme->text(), txtPrezime->text()));
+}
+
+void DPodaci::networkManagerFinished(QNetworkReply *reply)
+{
+    QByteArray data = reply->readAll();
+    QPixmap pixmap;
+    pixmap.loadFromData(data);
+    lblSlika->setPixmap(pixmap);
+}
+
+void DPodaci::snimi(void)
+{
+    QString strQuery;
+
+    if(m_id < 0)
+        strQuery = "INSERT INTO podaci(ime,"
+                    "                  prezime,"
+                    "                  pol,"
+                    "                  jmbg,"
+                    "                  datum_rodjenja,"
+                    "                  adresa,"
+                    "                  nacionalnost,"
+                    "                  bracno_stanje,"
+                    "                  slika,"
+                    "                  ostali_podaci,"
+                    "                  misljenje) "
+                   "VALUES(:ime,"
+                   "       :prezime,"
+                   "       :pol,"
+                   "       :jmbg,"
+                   "       :datum_rodjenja,"
+                   "       :adresa,"
+                   "       :nacionalnost,"
+                   "       :bracno_stanje,"
+                   "       :slika,"
+                   "       :ostali_podaci,"
+                   "       :misljenje);";
+    else
+        strQuery = "UPDATE podaci SET"
+                    "   ime=:ime,"
+                    "   prezime=:prezime,"
+                    "   pol=:ime,"
+                    "   jmbg=:jmbg,"
+                    "   datum_rodjenja=:datum_rodjenja,"
+                    "   adresa=:adresa,"
+                    "   nacionalnost=:nacionalnost,"
+                    "   bracno_stanje=:bradno_stanje,"
+                    "   slika=:slika,"
+                    "   ostali_podaci=:ostali_podaci,"
+                    "   misljenje=:misljenje) "
+                   "WHERE id=:id;";
+
+    QSqlQuery query(QSqlDatabase::database());
+    query.prepare(strQuery);
+    query.bindValue(":ime", txtIme->text());
+    query.bindValue(":prezime", txtPrezime->text());
+    query.bindValue(":pol", cbPol->currentText());
+    query.bindValue(":jmbg", txtJmbg->text());
+    query.bindValue(":datum_rodjenja", deDatumRodjenja->date());
+    query.bindValue(":adresa", txtAdresa->text());
+    query.bindValue(":nacionalnost", cbNacionalnost->currentText());
+    query.bindValue(":bracno_stanje", cbBracnoStanje->currentText());
+    query.bindValue(":slika", txtIme->text() + "." + txtPrezime->text() + ".png");
+    query.bindValue(":ostali_podaci", txtOstaliPodaci->document()->toHtml());
+    query.bindValue(":misljenje", txtMisljenje->document()->toHtml());
+    if(m_id >= 0)
+        query.bindValue(":id", m_id);
+    query.exec();
 }
