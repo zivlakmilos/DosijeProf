@@ -12,8 +12,12 @@ public:
     explicit DPodaci(QWidget *parent = 0, Qt::WindowFlags f = 0);
     virtual ~DPodaci(void);
 
+    void setId(int id);
+
 private:
     void setupGUI(void);
+
+    int m_id;
 
 private slots:
     void promenaNatpisa(void);

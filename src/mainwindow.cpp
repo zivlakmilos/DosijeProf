@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 
 #include <QtGui>
+#include <QtSql>
 
 #include "centralwidget.h"
 #include "dpodaci.h"
@@ -11,6 +12,14 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
     QCoreApplication::setApplicationName("Dosije");
     QCoreApplication::setOrganizationName("Milos Zivlak");
     QCoreApplication::setOrganizationDomain("zivlak.ddns.net");
+
+    QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
+    db.setHostName(QCoreApplication::organizationDomain());
+    db.setDatabaseName("dosijeprof");
+    db.setUserName("dosijeprof");
+    db.setPassword("D0SiJePr0f1317mz");
+    if(!db.open())
+        qDebug() << db.lastError();
 
     setWindowTitle(QCoreApplication::applicationName());
 
