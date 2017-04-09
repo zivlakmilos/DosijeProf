@@ -18,11 +18,17 @@ set(SOURCES
     src/main.cpp
     src/mainwindow.cpp
     src/centralwidget.cpp
+    src/dpodaci.cpp
 )
 
 set(HEADERS
     include/mainwindow.h
     include/centralwidget.h
+    include/dpodaci.h
+)
+
+set(UI
+    res/ui/podaci.ui
 )
 
 set(RESOURCES
@@ -33,7 +39,11 @@ foreach(MOCheader ${HEADERS})
     QT4_WRAP_CPP(MOCsrc ${MOCheader})
 endforeach(MOCheader)
 
-add_executable(${PROJECT_NAME} ${SOURCES} ${MOCsrc} ${RESOURCES})
+foreach(UIheader ${UI})
+    QT4_WRAP_UI(UIsrc ${UIheader})
+endforeach(UIheader)
+
+add_executable(${PROJECT_NAME} ${SOURCES} ${MOCsrc} ${RESOURCES} ${UIsrc})
 target_link_libraries(${PROJECT_NAME}
     ${QT_QTCORE_LIBRARY}
     ${QT_QTGUI_LIBRARY}
@@ -41,4 +51,3 @@ target_link_libraries(${PROJECT_NAME}
 )
 
 install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
-

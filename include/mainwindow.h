@@ -23,6 +23,10 @@ private:
     QAction *m_actionNoviFajl;
     QAction *m_actionObrisiFajl;
     QAction *m_actionIzlaz;
+
+private slots:
+    void noviFajlOnClick(void);
+    void obrisiFajlOnClick(void);
 };
 
 #endif // _MAIN_WINDOW_H_
