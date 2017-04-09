@@ -1,0 +1,8 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+    <qresource>
+        <file>img/filenew.png</file>
+        <file>img/edittrash.png</file>
+        <file>img/fileclose.png</file>
+    </qresource>
+</RCC>
