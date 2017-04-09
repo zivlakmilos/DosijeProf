@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 
+class CentralWidget;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -12,6 +14,15 @@ public:
     virtual ~MainWindow(void);
 
 private:
+    void setupActions(void);
+    void setupMenu(void);
+    void setupToolbar(void);
+
+    CentralWidget *m_centralWidget;
+
+    QAction *m_actionNoviFajl;
+    QAction *m_actionObrisiFajl;
+    QAction *m_actionIzlaz;
 };
 
 #endif // _MAIN_WINDOW_H_
