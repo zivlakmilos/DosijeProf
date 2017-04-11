@@ -15,6 +15,8 @@ public:
     explicit CentralWidget(QWidget *parent = 0, Qt::WindowFlags f = 0);
     virtual ~CentralWidget(void);
 
+    void ucitajPodatke(void);
+
 private:
     void setupGUI(void);
 

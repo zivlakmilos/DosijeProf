@@ -85,7 +85,10 @@ void MainWindow::noviFajlOnClick(void)
 {
     DPodaci *dlgNoviFajl = new DPodaci(this);
     dlgNoviFajl->setWindowTitle(tr("Novi fajl"));
-    dlgNoviFajl->exec();
+    if(dlgNoviFajl->exec() == QDialog::Accepted)
+    {
+        m_centralWidget->ucitajPodatke();
+    }
 }
 
 void MainWindow::obrisiFajlOnClick(void)

@@ -8,6 +8,8 @@
 CentralWidget::CentralWidget(QWidget *parent, Qt::WindowFlags f)
     : QWidget(parent, f)
 {
+    m_modelPodaci = new QSqlQueryModel(this);
+    ucitajPodatke();
     setupGUI();
 }
 
@@ -15,18 +17,20 @@ CentralWidget::~CentralWidget(void)
 {
 }
 
-void CentralWidget::setupGUI(void)
+void CentralWidget::ucitajPodatke(void)
 {
-    /*
-     * Kreiraj vizualne komponente
-     */
-
-    m_modelPodaci = new QSqlQueryModel(this);
     m_modelPodaci->setQuery("SELECT id, ime, prezime, jmbg FROM podaci;");
     m_modelPodaci->setHeaderData(0, Qt::Horizontal, tr("ID"));
     m_modelPodaci->setHeaderData(1, Qt::Horizontal, tr("Ime"));
     m_modelPodaci->setHeaderData(2, Qt::Horizontal, tr("Prezime"));
     m_modelPodaci->setHeaderData(3, Qt::Horizontal, tr("JMBG"));
+}
+
+void CentralWidget::setupGUI(void)
+{
+    /*
+     * Kreiraj vizualne komponente
+     */
 
     m_tblPodaci = new QTableView(this);
     m_tblPodaci->setModel(m_modelPodaci);
@@ -56,5 +60,8 @@ void CentralWidget::podaciOnDoubleClick(const QModelIndex &index)
 
     DPodaci *dlgPodaci = new DPodaci(this);
     dlgPodaci->setId(m_modelPodaci->data(idIndex).toInt());
-    dlgPodaci->exec();
+    if(dlgPodaci->exec() == QDialog::Accepted)
+    {
+        ucitajPodatke();
+    }
 }
