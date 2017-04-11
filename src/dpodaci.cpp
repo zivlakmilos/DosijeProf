@@ -31,6 +31,23 @@ void DPodaci::setupGUI(void)
     buttonBox->button(QDialogButtonBox::Save)->setText(tr("Snimi"));
     buttonBox->button(QDialogButtonBox::Discard)->setText(tr("Otkazi"));
 
+    cbPol->addItem(tr("M"));
+    cbPol->addItem(tr("Z"));
+
+    QStringList nacionalnost;
+    nacionalnost << ""
+                 << tr("Srbin")
+                 << tr("Hrvat")
+                 << tr("Bosnjak");
+    cbNacionalnost->addItems(nacionalnost);
+
+    QStringList bracnoStanje;
+    bracnoStanje << ""
+                 << tr("Slobodan/Slobodna")
+                 << tr("Veren/Verena")
+                 << tr("Ozenjen/Udata");
+    cbBracnoStanje->addItems(bracnoStanje);
+
     connect(txtIme, SIGNAL(textChanged(QString)),
             this, SLOT(promenaNatpisa()));
     connect(txtPrezime, SIGNAL(textChanged(QString)),
@@ -66,6 +83,30 @@ void DPodaci::setId(int id)
         txtAdresa->setText(query.value(5).toString());
         txtOstaliPodaci->setText(query.value(9).toString());
         txtMisljenje->setText(query.value(10).toString());
+
+        int polIndex = cbPol->findText(query.value(2).toString());
+        if(polIndex > 0)
+            cbPol->setCurrentIndex(polIndex);
+
+        int nacionalnostIndex = cbNacionalnost->findText(query.value(6).toString());
+        if(nacionalnostIndex >= 0)
+        {
+            cbNacionalnost->setCurrentIndex(nacionalnostIndex);
+        } else
+        {
+            cbNacionalnost->addItem(query.value(6).toString());
+            cbNacionalnost->setCurrentIndex(cbNacionalnost->count() - 1);
+        }
+
+        int bracnoStanjeIndex = cbBracnoStanje->findText(query.value(7).toString());
+        if(bracnoStanjeIndex >= 0)
+        {
+            cbNacionalnost->setCurrentIndex(bracnoStanjeIndex);
+        } else
+        {
+            cbNacionalnost->addItem(query.value(7).toString());
+            cbNacionalnost->setCurrentIndex(cbNacionalnost->count() - 1);
+        }
 
         QSettings settings;
         QUrl url(settings.value("url/img").toString() + query.value(8).toString());
