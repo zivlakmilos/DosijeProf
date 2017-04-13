@@ -2,10 +2,14 @@
 #define _W_PODACI_H_
 
 #include <QDialog>
+
 #include "ui_podaci.h"
+#include "clickablelabel.h"
 
 class QNetworkAccessManager;
 class QNetworkReply;
+
+class ClickableLabel;
 
 class DPodaci : public QDialog, private Ui::frmPodaci
 {
@@ -20,12 +24,15 @@ public:
 private:
     void setupGUI(void);
 
+    ClickableLabel *m_lblSlika;
+
     int m_id;
     QNetworkAccessManager *m_networkManager;
 
 private slots:
     void promenaNatpisa(void);
     void networkManagerFinished(QNetworkReply *reply);
+    void lblSlikaOnClick(void);
     void snimi(void);
 };
 

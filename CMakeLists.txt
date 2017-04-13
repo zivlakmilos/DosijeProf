@@ -25,6 +25,7 @@ set(HEADERS
     include/mainwindow.h
     include/centralwidget.h
     include/dpodaci.h
+    include/clickablelabel.h
 )
 
 set(UI

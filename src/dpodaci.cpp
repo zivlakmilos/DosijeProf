@@ -4,6 +4,8 @@
 #include <QtSql>
 #include <QtNetwork/QtNetwork>
 
+#include "clickablelabel.h"
+
 DPodaci::DPodaci(QWidget *parent, Qt::WindowFlags f)
     : QDialog(parent, f),
       m_id(-1)
@@ -25,9 +27,14 @@ DPodaci::~DPodaci(void)
 
 void DPodaci::setupGUI(void)
 {
-    lblSlika->setScaledContents(true);
-    lblSlika->setMaximumSize(QSize(200, 200));
-    lblSlika->setPixmap(QPixmap(tr(":img/avatar.png")));
+    lblSlika->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    m_lblSlika = new ClickableLabel(lblSlika);
+    m_lblSlika->setScaledContents(true);
+    m_lblSlika->setMaximumSize(QSize(200, 200));
+    m_lblSlika->setPixmap(QPixmap(tr(":img/avatar.png")));
+    connect(m_lblSlika, SIGNAL(clicked()),
+            this, SLOT(lblSlikaOnClick()));
+
 
     buttonBox->button(QDialogButtonBox::Save)->setText(tr("Snimi"));
     buttonBox->button(QDialogButtonBox::Discard)->setText(tr("Otkazi"));
@@ -129,7 +136,21 @@ void DPodaci::networkManagerFinished(QNetworkReply *reply)
     QByteArray data = reply->readAll();
     QPixmap pixmap;
     pixmap.loadFromData(data);
-    lblSlika->setPixmap(pixmap);
+    m_lblSlika->setPixmap(pixmap);
+}
+
+void DPodaci::lblSlikaOnClick(void)
+{
+    QDialog *dlgSlika = new QDialog;
+    dlgSlika->setWindowTitle(txtIme->text() + " " + txtPrezime->text());
+
+    QLabel *slika = new QLabel(dlgSlika);
+    slika->setPixmap(*m_lblSlika->pixmap());
+
+    dlgSlika->resize(slika->sizeHint());
+    dlgSlika->exec();
+
+    delete dlgSlika;
 }
 
 void DPodaci::snimi(void)
@@ -181,7 +202,6 @@ void DPodaci::snimi(void)
     query.bindValue(":adresa", txtAdresa->text());
     query.bindValue(":nacionalnost", cbNacionalnost->currentText());
     query.bindValue(":bracno_stanje", cbBracnoStanje->currentText());
-    //query.bindValue(":slika", txtIme->text() + "." + txtPrezime->text() + ".png");
     query.bindValue(":ostali_podaci", txtOstaliPodaci->document()->toPlainText());
     query.bindValue(":misljenje", txtMisljenje->document()->toPlainText());
     if(m_id >= 0)
