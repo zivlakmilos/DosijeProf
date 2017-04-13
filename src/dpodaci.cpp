@@ -27,6 +27,7 @@ void DPodaci::setupGUI(void)
 {
     lblSlika->setScaledContents(true);
     lblSlika->setMaximumSize(QSize(200, 200));
+    lblSlika->setPixmap(QPixmap(tr(":img/avatar.png")));
 
     buttonBox->button(QDialogButtonBox::Save)->setText(tr("Snimi"));
     buttonBox->button(QDialogButtonBox::Discard)->setText(tr("Otkazi"));
@@ -122,6 +123,9 @@ void DPodaci::promenaNatpisa(void)
 
 void DPodaci::networkManagerFinished(QNetworkReply *reply)
 {
+    if(reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() != 200)
+        return;
+
     QByteArray data = reply->readAll();
     QPixmap pixmap;
     pixmap.loadFromData(data);

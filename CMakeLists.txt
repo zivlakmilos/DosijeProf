@@ -33,6 +33,7 @@ set(UI
 
 set(RESOURCES
     res/ikonice.qrc
+    res/slike.qrc
 )
 
 foreach(MOCheader ${HEADERS})
