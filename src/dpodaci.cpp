@@ -101,11 +101,11 @@ void DPodaci::setId(int id)
         int bracnoStanjeIndex = cbBracnoStanje->findText(query.value(7).toString());
         if(bracnoStanjeIndex >= 0)
         {
-            cbNacionalnost->setCurrentIndex(bracnoStanjeIndex);
+            cbBracnoStanje->setCurrentIndex(bracnoStanjeIndex);
         } else
         {
-            cbNacionalnost->addItem(query.value(7).toString());
-            cbNacionalnost->setCurrentIndex(cbNacionalnost->count() - 1);
+            cbBracnoStanje->addItem(query.value(7).toString());
+            cbBracnoStanje->setCurrentIndex(cbNacionalnost->count() - 1);
         }
 
         QSettings settings;
@@ -141,9 +141,8 @@ void DPodaci::snimi(void)
                     "                  adresa,"
                     "                  nacionalnost,"
                     "                  bracno_stanje,"
-                    "                  slika,"
                     "                  ostali_podaci,"
-                    "                  misljenje) "
+                    "                  misljenje)"
                    "VALUES(:ime,"
                    "       :prezime,"
                    "       :pol,"
@@ -152,22 +151,20 @@ void DPodaci::snimi(void)
                    "       :adresa,"
                    "       :nacionalnost,"
                    "       :bracno_stanje,"
-                   "       :slika,"
                    "       :ostali_podaci,"
                    "       :misljenje);";
     else
         strQuery = "UPDATE podaci SET"
                     "   ime=:ime,"
                     "   prezime=:prezime,"
-                    "   pol=:ime,"
+                    "   pol=:pol,"
                     "   jmbg=:jmbg,"
                     "   datum_rodjenja=:datum_rodjenja,"
                     "   adresa=:adresa,"
                     "   nacionalnost=:nacionalnost,"
                     "   bracno_stanje=:bradno_stanje,"
-                    "   slika=:slika,"
                     "   ostali_podaci=:ostali_podaci,"
-                    "   misljenje=:misljenje) "
+                    "   misljenje=:misljenje "
                    "WHERE id=:id;";
 
     QSqlQuery query(QSqlDatabase::database());
@@ -180,9 +177,9 @@ void DPodaci::snimi(void)
     query.bindValue(":adresa", txtAdresa->text());
     query.bindValue(":nacionalnost", cbNacionalnost->currentText());
     query.bindValue(":bracno_stanje", cbBracnoStanje->currentText());
-    query.bindValue(":slika", txtIme->text() + "." + txtPrezime->text() + ".png");
-    query.bindValue(":ostali_podaci", txtOstaliPodaci->document()->toHtml());
-    query.bindValue(":misljenje", txtMisljenje->document()->toHtml());
+    //query.bindValue(":slika", txtIme->text() + "." + txtPrezime->text() + ".png");
+    query.bindValue(":ostali_podaci", txtOstaliPodaci->document()->toPlainText());
+    query.bindValue(":misljenje", txtMisljenje->document()->toPlainText());
     if(m_id >= 0)
         query.bindValue(":id", m_id);
     query.exec();
