@@ -23,6 +23,9 @@ private:
     QSqlQueryModel *m_modelPodaci;
     QTableView *m_tblPodaci;
 
+public slots:
+    void obrisiSelektovanRed(void);
+
 private slots:
     void podaciOnDoubleClick(const QModelIndex &index);
 };

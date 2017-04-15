@@ -93,4 +93,5 @@ void MainWindow::noviFajlOnClick(void)
 
 void MainWindow::obrisiFajlOnClick(void)
 {
+    m_centralWidget->obrisiSelektovanRed();
 }

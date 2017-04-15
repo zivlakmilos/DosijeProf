@@ -54,6 +54,38 @@ void CentralWidget::setupGUI(void)
     setLayout(layoutMain);
 }
 
+void CentralWidget::obrisiSelektovanRed(void)
+{
+    if(QMessageBox::warning(this, tr("Potvrda brisanja"),
+                            tr("Da li ste sigurni da zelite obrisati selektovane podatke"),
+                            QMessageBox::Yes | QMessageBox::No)
+        != QMessageBox::Yes)
+    {
+        return;
+    }
+
+    QModelIndexList selekcije = m_tblPodaci->selectionModel()->selectedRows();
+
+    for(QModelIndex selekcija : selekcije)
+    {
+        QModelIndex index = m_modelPodaci->index(selekcija.row(), 0);
+
+        int id = m_modelPodaci->data(index).toInt();
+
+        QSqlQuery query(QSqlDatabase::database());
+        query.prepare("DELETE FROM podaci WHERE id=:id;");
+        query.bindValue(":id", id);
+        if(!query.exec())
+        {
+            QMessageBox::critical(this, tr("Greska prilikom brisanja podataka"),
+                                  tr("Nije moguce obrisati podatke iz baze podataka"),
+                                  QMessageBox::Ok);
+        }
+    }
+
+    ucitajPodatke();
+}
+
 void CentralWidget::podaciOnDoubleClick(const QModelIndex &index)
 {
     QModelIndex idIndex = m_modelPodaci->index(index.row(), 0);
